@@ -1,4 +1,4 @@
-package pl.wsb.carrental.fleet.entity;
+package pl.wsb.carrental.car.entity;
 
 /** Stan samochodu w wypożyczalni. */
 public enum CarStatus {

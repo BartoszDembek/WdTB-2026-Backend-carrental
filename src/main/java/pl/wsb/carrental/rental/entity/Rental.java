@@ -1,13 +1,9 @@
 package pl.wsb.carrental.rental.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import pl.wsb.carrental.account.domain.UserAccount;
+import pl.wsb.carrental.car.entity.Car;
+import pl.wsb.carrental.customer.entity.Customer;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -42,6 +38,18 @@ public class Rental {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private RentalStatus status;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    @ManyToOne
+    @JoinColumn(name = "handled_by_id")
+    private UserAccount handledBy;
 
     protected Rental() {
     }

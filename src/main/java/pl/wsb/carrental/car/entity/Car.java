@@ -1,15 +1,15 @@
-package pl.wsb.carrental.fleet.entity;
+package pl.wsb.carrental.car.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import pl.wsb.carrental.equipment.entity.Equipment;
+import pl.wsb.carrental.rental.entity.Rental;
+import pl.wsb.carrental.service_record.entity.ServiceRecord;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Samochód z floty wypożyczalni: dane do listy i filtrowania (marka, model, kolor, liczba miejsc, moc silnika)
@@ -51,6 +51,14 @@ public class Car {
     @Column(name = "status", nullable = false, length = 20)
     private CarStatus status;
 
+    @ManyToMany
+    @JoinTable(
+            name = "car_equipment",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "equipment_id")
+    )
+    private Set<Equipment> equipment = new HashSet<>();
+
     protected Car() {
     }
 
@@ -65,6 +73,7 @@ public class Car {
         this.dailyRate = dailyRate;
         this.available = available;
         this.status = status;
+
     }
 
     public Long getId() {

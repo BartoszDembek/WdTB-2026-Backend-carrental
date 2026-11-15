@@ -6,10 +6,6 @@ insert into user_account (email, display_name, role, created_at) values
     ('wrx81939@student.wroclaw.merito.pl',  'Rafał',  'USER',    current_timestamp),
     ('biuro@carrental.pl',                  'Biuro wynajmu', 'PARTNER', current_timestamp);
 
--- LAB 01: Wasze konta (zmieńcie na swoje dane, rola USER)
--- insert into user_account (email, display_name, role, created_at) values
---     ('imie.nazwisko@student.merito.pl', 'Imię', 'USER', current_timestamp);
-
 -- ===== LAB 02 · car =====
 insert into car (brand, model, plate_number, color, seats, engine_power, daily_rate, available, status) values
     ('Toyota',      'Corolla',  'DW 12345',  'biały',      5, 132, 149.00, true,  'AVAILABLE'),
@@ -24,7 +20,49 @@ insert into customer (full_name, email, phone, license_number, registered_on, st
     ('Ewa Wiśniewska',  'ewa.wisniewska@example.com',  '600500600', 'DOW/3456789', '2026-10-20', 'Świdnicka 3/4', 'Wrocław', '50-066');
 
 -- ===== LAB 02 · rental =====
-insert into rental (reservation_number, start_date, end_date, pickup_city, total_price, status) values
-    ('WYN-2026-001', '2026-10-05', '2026-10-09', 'Wrocław', 596.00, 'RETURNED'),
-    ('WYN-2026-002', '2026-10-26', '2026-10-30', 'Wrocław', 556.00, 'ACTIVE'),
-    ('WYN-2026-003', '2026-11-02', '2026-11-06', 'Wrocław', 996.00, 'PLANNED');
+-- Klucze obce: customer_id, car_id, handled_by_id (user_account).
+insert into rental (reservation_number, start_date, end_date, pickup_city, total_price, status, customer_id, car_id, handled_by_id) values
+    ('WYN-2026-001', '2026-10-05', '2026-10-09', 'Wrocław', 596.00, 'RETURNED',
+    (select id from customer where email = 'anna.kowalska@example.com'),
+    (select id from car where plate_number = 'DW 12345'),
+    (select id from user_account where email = 'biuro@carrental.pl')),
+    ('WYN-2026-002', '2026-10-26', '2026-10-30', 'Wrocław', 556.00, 'ACTIVE',
+    (select id from customer where email = 'jan.nowak@example.com'),
+    (select id from car where plate_number = 'DZ 24680'),
+    (select id from user_account where email = 'biuro@carrental.pl')),
+    ('WYN-2026-003', '2026-11-02', '2026-11-06', 'Wrocław', 996.00, 'PLANNED',
+    (select id from customer where email = 'ewa.wisniewska@example.com'),
+    (select id from car where plate_number = 'DWX 13579'),
+    (select id from user_account where email = 'wrx81977@student.wroclaw.merito.pl'));
+
+-- ===== LAB 03 · service_record =====
+-- Tabela podrzędna względem car. Klucz obcy: car_id.
+insert into service_record (service_date, description, cost, car_id) values
+    ('2026-09-10', 'Wymiana oleju i filtrów',     450.00, (select id from car where plate_number = 'DW 12345')),
+    ('2026-10-02', 'Wymiana klocków hamulcowych', 780.00, (select id from car where plate_number = 'DW 67890')),
+    ('2026-11-10', 'Przegląd techniczny',         320.00, (select id from car where plate_number = 'DWX 13579')),
+    ('2026-11-12', 'Wymiana rozrządu',           2100.00, (select id from car where plate_number = 'DWX 13579'));
+
+-- ===== LAB 03 · invoice =====
+-- Tabela podrzędna względem rental (relacja 1:1). Klucz obcy: rental_id.
+insert into invoice (invoice_number, issue_date, amount, paid, rental_id) values
+    ('FV/2026/10/001', '2026-10-09', 596.00, true,  (select id from rental where reservation_number = 'WYN-2026-001')),
+    ('FV/2026/10/002', '2026-10-26', 556.00, false, (select id from rental where reservation_number = 'WYN-2026-002'));
+
+-- ===== LAB 02 · equipment =====
+insert into equipment (name, description) values
+                                              ('Nawigacja GPS',     'Wbudowana nawigacja z mapami Europy'),
+                                              ('Fotelik dziecięcy', 'Fotelik 9-36 kg'),
+                                              ('Klimatyzacja',      'Klimatyzacja automatyczna'),
+                                              ('Hak holowniczy',    'Hak z wyjmowaną kulą');
+
+-- ===== LAB 02 · car_equipment (tabela łącząca wiele-do-wielu) =====
+insert into car_equipment (car_id, equipment_id) values
+    ((select id from car where plate_number = 'DW 12345'),  (select id from equipment where name = 'Klimatyzacja')),
+    ((select id from car where plate_number = 'DW 12345'),  (select id from equipment where name = 'Nawigacja GPS')),
+    ((select id from car where plate_number = 'DW 67890'),  (select id from equipment where name = 'Klimatyzacja')),
+    ((select id from car where plate_number = 'DW 67890'),  (select id from equipment where name = 'Hak holowniczy')),
+    ((select id from car where plate_number = 'DZ 24680'),  (select id from equipment where name = 'Klimatyzacja')),
+    ((select id from car where plate_number = 'DWX 13579'), (select id from equipment where name = 'Klimatyzacja')),
+    ((select id from car where plate_number = 'DWX 13579'), (select id from equipment where name = 'Nawigacja GPS')),
+    ((select id from car where plate_number = 'DWX 13579'), (select id from equipment where name = 'Fotelik dziecięcy'));

@@ -1,14 +1,11 @@
 package pl.wsb.carrental.customer.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import pl.wsb.carrental.rental.entity.Rental;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /** Klient wypożyczalni: dane kontaktowe, numer prawa jazdy i adres (klasa wbudowana). */
 @Entity
@@ -36,6 +33,9 @@ public class Customer {
 
     @Embedded
     private Address address;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Rental> rentals = new ArrayList<>();
 
     protected Customer() {
     }
