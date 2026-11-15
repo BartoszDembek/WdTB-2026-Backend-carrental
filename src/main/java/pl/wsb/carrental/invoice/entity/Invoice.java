@@ -13,9 +13,16 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "invoice_number", nullable = false)
     private String invoiceNumber;
+
+    @Column(name = "issue_date", nullable = false)
     private LocalDate issueDate;
+
+    @Column(name = "amount", nullable = false)
     private BigDecimal amount;
+
+    @Column(name = "paid")
     private boolean paid;
 
     @OneToOne(optional = false)

@@ -47,14 +47,14 @@ insert into service_record (service_date, description, cost, car_id) values
 -- Tabela podrzędna względem rental (relacja 1:1). Klucz obcy: rental_id.
 insert into invoice (invoice_number, issue_date, amount, paid, rental_id) values
     ('FV/2026/10/001', '2026-10-09', 596.00, true,  (select id from rental where reservation_number = 'WYN-2026-001')),
-    ('FV/2026/10/002', '2026-10-26', 556.00, false, (select id from rental where reservation_number = 'WYN-2026-002'));
-
+    ('FV/2026/10/002', '2026-10-26', 556.00, false, (select id from rental where reservation_number = 'WYN-2026-002')),
+    ('FV/2026/11/003', '2026-11-02', 996.00, false, (select id from rental where reservation_number = 'WYN-2026-003'));
 -- ===== LAB 02 · equipment =====
-insert into equipment (name, description) values
-                                              ('Nawigacja GPS',     'Wbudowana nawigacja z mapami Europy'),
-                                              ('Fotelik dziecięcy', 'Fotelik 9-36 kg'),
-                                              ('Klimatyzacja',      'Klimatyzacja automatyczna'),
-                                              ('Hak holowniczy',    'Hak z wyjmowaną kulą');
+insert into equipment (name, description, category, daily_fee) values
+    ('Nawigacja GPS',     'Wbudowana nawigacja z mapami Europy', 'ELEKTRONIKA', 15.00),
+    ('Fotelik dziecięcy', 'Fotelik 9-36 kg','BEZPIECZENSTWO', 10.00),
+    ('Klimatyzacja',      'Klimatyzacja automatyczna','KOMFORT',     0.00),
+    ('Hak holowniczy',    'Hak z wyjmowaną kulą','TRANSPORT',   25.00);
 
 -- ===== LAB 02 · car_equipment (tabela łącząca wiele-do-wielu) =====
 insert into car_equipment (car_id, equipment_id) values

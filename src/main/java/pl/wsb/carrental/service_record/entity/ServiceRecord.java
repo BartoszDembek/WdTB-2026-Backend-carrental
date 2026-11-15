@@ -13,8 +13,13 @@ public class ServiceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "service_date", nullable = false)
     private LocalDate serviceDate;
+
+    @Column(name = "description", nullable = false)
     private String description;
+
+    @Column(name = "cost")
     private BigDecimal cost;
 
     @ManyToOne(optional = false)
