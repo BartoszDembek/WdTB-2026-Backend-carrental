@@ -1,6 +1,7 @@
 package pl.wsb.carrental.rental.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.FetchType;
 import pl.wsb.carrental.account.domain.UserAccount;
 import pl.wsb.carrental.car.entity.Car;
 import pl.wsb.carrental.customer.entity.Customer;
@@ -39,15 +40,15 @@ public class Rental {
     @Column(name = "status", nullable = false, length = 20)
     private RentalStatus status;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "car_id")
     private Car car;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "handled_by_id")
     private UserAccount handledBy;
 

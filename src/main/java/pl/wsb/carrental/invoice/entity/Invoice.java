@@ -1,6 +1,7 @@
 package pl.wsb.carrental.invoice.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.FetchType;
 import pl.wsb.carrental.rental.entity.Rental;
 
 import java.math.BigDecimal;
@@ -25,7 +26,7 @@ public class Invoice {
     @Column(name = "paid")
     private boolean paid;
 
-    @OneToOne(optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "rental_id", unique = true)
     private Rental rental;
 }

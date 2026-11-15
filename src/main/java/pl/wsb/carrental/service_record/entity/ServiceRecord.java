@@ -1,6 +1,7 @@
 package pl.wsb.carrental.service_record.entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.FetchType;
 import pl.wsb.carrental.car.entity.Car;
 
 import java.math.BigDecimal;
@@ -22,7 +23,7 @@ public class ServiceRecord {
     @Column(name = "cost")
     private BigDecimal cost;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "car_id")
     private Car car;
 }
